@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gamificar en el aula · Presentador</title>
+<link rel="stylesheet" href="/theme.css">
+<link rel="stylesheet" href="/host.css">
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="stage">
+  <div id="deck"></div>
+  <div id="hud">
+    <div class="hud-top">
+      <div class="hud-brand pixel">GAMIFICAR <span>EN EL AULA</span></div>
+      <div class="hud-right">
+        <div class="hud-chip" id="hudPlayers"><span class="dot"></span><b id="hudOnline">0</b> conectados</div>
+        <div class="hud-chip pixel" id="hudLv">LV 01/37</div>
+      </div>
+    </div>
+    <div class="hud-bottom">
+      <div class="hud-section pixel" id="hudSection">INTRO</div>
+      <div class="hud-progress" id="hudProgress"></div>
+    </div>
+    <div id="miniQr" class="mini-qr">
+      <img src="/qr.svg" alt="QR">
+      <div><div class="pixel mq-t">ÚNETE</div><div class="mq-url" id="mqUrl"></div></div>
+    </div>
+  </div>
+  <div id="wipe"></div>
+  <div id="flash"></div>
+</div>
+
+<div id="controls">
+  <button id="btnPrev" title="Anterior (←)">◀</button>
+  <button id="btnReveal" title="Revelar / cerrar (Enter)">✔</button>
+  <button id="btnNext" title="Siguiente (→)">▶</button>
+  <button id="btnMenu" title="Menú">☰</button>
+</div>
+<div id="menu" class="hidden">
+  <div class="menu-box">
+    <h3 class="pixel">PANEL DEL PROFE</h3>
+    <p class="keys">→ / Espacio: siguiente · ←: anterior · Enter: revelar · F: pantalla completa · Q: QR · M: sonido</p>
+    <div class="menu-row">
+      <button id="mFull">Pantalla completa (F)</button>
+      <button id="mQr">Mostrar/ocultar QR (Q)</button>
+      <button id="mMute">Sonido: ON (M)</button>
+    </div>
+    <div class="menu-row">
+      <button id="mReopen">Repetir actividad de esta escena</button>
+      <button id="mReset" class="danger">Reiniciar todo el taller</button>
+    </div>
+    <h4>Ir a escena</h4>
+    <div id="mJump" class="jump"></div>
+    <h4>Jugadores</h4>
+    <div id="mPlayers" class="mplayers"></div>
+    <button id="mClose" class="close">Cerrar</button>
+  </div>
+</div>
+
+<div id="auth" class="hidden">
+  <div class="auth-box">
+    <div class="pixel">PANEL DEL PROFE</div>
+    <input id="authKey" type="password" placeholder="Clave del presentador">
+    <button id="authGo">Entrar</button>
+    <div id="authErr"></div>
+  </div>
+</div>
+<div id="offline" class="hidden pixel">RECONECTANDO…</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrambleTextPlugin.min.js"></script>
+<script src="/vendor/gsap/TextPlugin.min.js"></script>
+<script src="/vendor/gsap/MotionPathPlugin.min.js"></script>
+<script src="/host.js"></script>
+</body>
+</html>

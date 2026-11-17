@@ -1,0 +1,22 @@
+{
+  "name": "taller-gamificacion",
+  "version": "1.0.0",
+  "description": "Taller Gamificar en el aula: presentación web animada + celulares por QR",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fontsource/outfit": "^5.3.0",
+    "@fontsource/press-start-2p": "^5.3.0",
+    "express": "^5.3.0",
+    "gsap": "^3.15.1",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

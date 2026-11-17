@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b1f">
+<title>Gamificar en el aula · Jugador</title>
+<link rel="stylesheet" href="/theme.css">
+<style>
+  html, body { overflow: auto; }
+  body { min-height: 100dvh; background: radial-gradient(120% 60% at 50% 110%, rgba(0,229,255,.18), transparent 60%), linear-gradient(180deg, #04061a, #0b1030 70%, #070b1f); }
+  body::before { content: ''; position: fixed; left: -50%; right: -50%; bottom: 0; height: 40vh; background-image: linear-gradient(rgba(0,229,255,.25) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,.25) 1px, transparent 1px); background-size: 46px 46px; transform: perspective(300px) rotateX(60deg); transform-origin: bottom; animation: grid 2.4s linear infinite; z-index: 0; opacity: .5; pointer-events: none; }
+  @keyframes grid { to { background-position: 0 46px; } }
+  .wrap { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; padding: 18px 18px calc(28px + env(safe-area-inset-bottom)); min-height: 100dvh; display: flex; flex-direction: column; }
+  .hidden { display: none !important; }
+
+  /* Unirse */
+  #join { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 22px; text-align: center; }
+  .logo { font-family: var(--pixel); font-size: 26px; line-height: 1.5; text-shadow: 3px 3px 0 rgba(255,62,165,.6); }
+  .logo span { color: var(--cy); }
+  .sub { color: var(--yl); font-weight: 600; font-size: 18px; }
+  input[type=text] { width: 100%; padding: 18px; border-radius: 16px; border: 3px solid var(--cy); background: rgba(10,16,48,.9); color: #fff; font-size: 22px; font-family: var(--sans); text-align: center; outline: none; }
+  input[type=text]:focus { box-shadow: 0 0 24px rgba(0,229,255,.5); }
+  .btn { width: 100%; padding: 18px; border: none; border-radius: 16px; background: linear-gradient(135deg, #ff3ea5, #b0206f); color: #fff; font-family: var(--pixel); font-size: 16px; letter-spacing: 1px; cursor: pointer; box-shadow: 0 6px 0 #6d1243; transition: transform .08s, box-shadow .08s; }
+  .btn:active { transform: translateY(5px); box-shadow: 0 1px 0 #6d1243; }
+  .btn:disabled { opacity: .5; }
+  .err { color: var(--mg); min-height: 20px; }
+
+  /* Cabecera */
+  .head { display: flex; align-items: center; gap: 12px; background: rgba(16,24,58,.85); border: 2px solid var(--line); border-radius: 18px; padding: 10px 14px; }
+  .head .av { font-size: 34px; }
+  .head .nm { font-weight: 800; font-size: 18px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .head .sc { text-align: right; }
+  .head .sc b { display: block; font-family: var(--pixel); font-size: 15px; color: var(--yl); }
+  .head .sc small { color: var(--mute); font-size: 13px; }
+  .lvbar { height: 6px; border-radius: 3px; background: rgba(143,163,199,.2); margin: 12px 4px 0; overflow: hidden; }
+  .lvbar i { display: block; height: 100%; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: width .5s; }
+
+  #main { flex: 1; display: flex; flex-direction: column; }
+  .screen { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 16px; padding-top: 14px; animation: enter .45s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes enter { from { opacity: 0; transform: translateY(24px) scale(.96); } }
+  .wait { text-align: center; }
+  .wait .eye { font-size: 72px; animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-12px); } }
+  .wait .t1 { font-family: var(--pixel); font-size: 14px; color: var(--accent); margin: 12px 0; }
+  .wait .t2 { font-size: 26px; font-weight: 800; }
+  .wait .t3 { color: var(--mute); margin-top: 8px; }
+  .kick { font-family: var(--pixel); font-size: 12px; color: var(--accent); text-align: center; }
+  .q { font-size: 22px; font-weight: 800; text-align: center; line-height: 1.25; }
+  .opts { display: grid; gap: 12px; }
+  .opt { position: relative; display: flex; align-items: center; gap: 14px; padding: 18px 16px; border-radius: 18px; border: 3px solid transparent; color: #fff; font-size: 19px; font-weight: 800; text-align: left; cursor: pointer; font-family: var(--sans); box-shadow: 0 5px 0 rgba(0,0,0,.35); transition: transform .08s, box-shadow .08s, opacity .3s; }
+  .opt:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,.35); }
+  .opt .sh { width: 46px; height: 46px; border-radius: 12px; background: rgba(0,0,0,.25); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+  .opt small { display: block; font-weight: 400; font-size: 14px; opacity: .85; }
+  .o0 { background: linear-gradient(135deg, #ff3ea5, #b0206f); }
+  .o1 { background: linear-gradient(135deg, #00b8d4, #0d5fa8); }
+  .o2 { background: linear-gradient(135deg, #e6b800, #b07800); }
+  .o3 { background: linear-gradient(135deg, #4fcf2a, #208a14); }
+  .o4 { background: linear-gradient(135deg, #9a6bff, #5a2fc0); }
+  .opt.sel { border-color: #fff; box-shadow: 0 0 22px rgba(255,255,255,.6); }
+  .opts.locked .opt:not(.sel) { opacity: .35; }
+  .opt .bar { position: absolute; left: 0; bottom: 0; height: 6px; background: rgba(255,255,255,.8); border-radius: 0 3px 3px 0; transition: width .6s; }
+  .opt .pc { margin-left: auto; font-family: var(--pixel); font-size: 12px; }
+  .timer { height: 10px; border-radius: 5px; background: rgba(143,163,199,.2); overflow: hidden; }
+  .timer i { display: block; height: 100%; background: linear-gradient(90deg, var(--gr), var(--yl), var(--mg)); width: 100%; }
+  .big { text-align: center; }
+  .big .ic { font-size: 90px; animation: pop .5s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop { from { transform: scale(0); } }
+  .big .t1 { font-family: var(--pixel); font-size: 20px; margin: 10px 0; }
+  .big .t2 { font-size: 20px; color: #dfe7f7; }
+  .ok .t1 { color: var(--gr); } .bad .t1 { color: var(--mg); }
+  .pts { font-family: var(--pixel); font-size: 26px; color: var(--yl); margin-top: 10px; }
+  .explain { background: rgba(16,24,58,.85); border-left: 4px solid var(--yl); border-radius: 12px; padding: 14px; font-size: 17px; text-align: left; margin-top: 10px; }
+  .cloudbox { display: flex; gap: 10px; }
+  .cloudbox input { flex: 1; text-align: left; font-size: 18px; padding: 16px; }
+  .cloudbox .btn { width: auto; padding: 0 18px; }
+  .mywords { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .mywords span { background: rgba(0,229,255,.12); border: 2px solid var(--cy); border-radius: 999px; padding: 8px 14px; font-weight: 600; animation: pop .4s cubic-bezier(.2,1.6,.4,1); }
+  .note { text-align: center; color: var(--mute); font-size: 15px; }
+  .fswb { display: grid; gap: 14px; }
+  .fswb .opt { justify-content: center; font-size: 22px; padding: 26px; }
+  #off { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: var(--mg); padding: 8px 14px; border-radius: 10px; font-family: var(--pixel); font-size: 10px; z-index: 5; }
+  .burst { position: fixed; pointer-events: none; font-size: 26px; z-index: 6; animation: fly 1s ease-out forwards; }
+  @keyframes fly { to { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); opacity: 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="join">
+    <div class="logo">GAMIFICAR<br><span>EN EL AULA</span></div>
+    <div class="sub">Taller para profes de idiomas</div>
+    <input id="name" type="text" maxlength="18" placeholder="Tu nombre" autocomplete="off" enterkeyhint="go">
+    <button id="go" class="btn">PRESS START ▶</button>
+    <div class="err" id="err"></div>
+  </section>
+
+  <section id="game" class="hidden" style="flex:1;display:flex;flex-direction:column">
+    <div class="head">
+      <span class="av" id="hAv">🦊</span>
+      <span class="nm" id="hName">—</span>
+      <span class="sc"><b id="hScore">0</b><small id="hRank"></small></span>
+    </div>
+    <div class="lvbar"><i id="hBar" style="width:0"></i></div>
+    <div id="main"></div>
+  </section>
+</div>
+<div id="off" class="hidden">RECONECTANDO…</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ACC = { 0: '#00e5ff', 1: '#00e5ff', 2: '#ff3ea5', 3: '#ffd60a', 4: '#7cff4f' };
+  const SHAPES = ['▲', '◆', '●', '■', '★'];
+
+  let pid = localStorage.getItem('tg_pid');
+  if (!pid) { pid = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now()); localStorage.setItem('tg_pid', pid); }
+  let name = localStorage.getItem('tg_name') || '';
+  $('#name').value = name;
+
+  const socket = io();
+  let joined = false;
+  let S = null;
+  let lastKey = '';
+  let clockOffset = 0;
+
+  function join() {
+    const n = $('#name').value.trim();
+    if (!n) { $('#err').textContent = 'Escribe tu nombre'; return; }
+    $('#go').disabled = true;
+    socket.emit('join', { pid, name: n }, (res) => {
+      $('#go').disabled = false;
+      if (!res || !res.ok) { $('#err').textContent = (res && res.error) || 'No se pudo entrar'; return; }
+      name = n; localStorage.setItem('tg_name', n); joined = true;
+      $('#join').classList.add('hidden'); $('#game').classList.remove('hidden');
+      if (navigator.vibrate) navigator.vibrate(30);
+    });
+  }
+  $('#go').onclick = join;
+  $('#name').addEventListener('keydown', (e) => { if (e.key === 'Enter') join(); });
+
+  socket.on('connect', () => { $('#off').classList.add('hidden'); if (name && (joined || localStorage.getItem('tg_name'))) { $('#name').value = name; join(); } });
+  socket.on('disconnect', () => $('#off').classList.remove('hidden'));
+  socket.on('kicked', () => { joined = false; localStorage.removeItem('tg_name'); $('#game').classList.add('hidden'); $('#join').classList.remove('hidden'); $('#err').textContent = 'El profe te sacó de la sala.'; });
+
+  socket.on('state', (st) => {
+    const prevScore = S && S.me ? S.me.score : null;
+    S = st;
+    if (st.act && st.act.now) clockOffset = st.act.now - Date.now();
+    document.documentElement.style.setProperty('--accent', ACC[st.lv] || ACC[0]);
+    $('#hAv').textContent = st.me.avatar; $('#hName').textContent = st.me.name;
+    $('#hScore').textContent = st.me.score;
+    $('#hRank').textContent = st.me.rank ? `#${st.me.rank} de ${st.me.of}` : '';
+    $('#hBar').style.width = ((st.slide + 1) / st.total * 100) + '%';
+    if (prevScore !== null && st.me.score > prevScore) burst();
+    render();
+  });
+
+  function send(payload) {
+    if (!S) return;
+    socket.emit('answer', { slide: S.slide, ...payload });
+    if (navigator.vibrate) navigator.vibrate(20);
+  }
+
+  function burst() {
+    const r = $('#hScore').getBoundingClientRect();
+    for (let i = 0; i < 10; i++) {
+      const s = document.createElement('span');
+      s.className = 'burst'; s.textContent = ['⭐', '✨', '💥', '🪙'][i % 4];
+      s.style.left = r.left + 'px'; s.style.top = r.top + 'px';
+      s.style.setProperty('--dx', (Math.random() * 200 - 100) + 'px');
+      s.style.setProperty('--dy', (Math.random() * 160 + 40) + 'px');
+      s.style.setProperty('--r', (Math.random() * 360) + 'deg');
+      document.body.appendChild(s); setTimeout(() => s.remove(), 1000);
+    }
+  }
+
+  // Clave de render: solo re-pintamos cuando cambia algo visible (evita parpadeos)
+  function render() {
+    const a = S.act, m = S.mine;
+    const key = JSON.stringify([S.slide, a && a.open, a && a.revealed, m && m.a, m && m.words && m.words.length, a && a.counts]);
+    if (key === lastKey) return;
+    lastKey = key;
+    const main = $('#main');
+    if (!a) { main.innerHTML = waitScreen(); return; }
+    if (a.type === 'quiz') main.innerHTML = quiz(a, m);
+    else if (a.type === 'poll') main.innerHTML = poll(a, m);
+    else if (a.type === 'fsw') main.innerHTML = fsw(a, m);
+    else if (a.type === 'cloud') main.innerHTML = cloud(a, m);
+    bind();
+  }
+
+  function waitScreen() {
+    const lvl = S.type === 'level';
+    const icons = { cover: '🎮', level: '🚀', sharkbait: '🦈', podium: '🏆', end: '👾' };
+    const t1 = S.type === 'cover' ? '¡ESTÁS DENTRO!' : lvl ? S.title : 'MIRA LA PANTALLA';
+    const t3 = S.type === 'cover' ? 'Espera a que el profe empiece' : S.type === 'sharkbait' ? 'Escanea el QR de Shark Bait en la pantalla' : 'Las preguntas aparecerán aquí';
+    return `<div class="screen wait"><div class="eye">${icons[S.type] || '👀'}</div><div class="t1">${esc(t1)}</div><div class="t2">${esc(lvl || S.type === 'cover' ? '' : S.title)}</div><div class="t3">${t3}</div></div>`;
+  }
+
+  function quiz(a, m) {
+    if (a.revealed) {
+      if (!m) return `<div class="screen big bad"><div class="ic">⌛</div><div class="t1">¡SE ACABÓ EL TIEMPO!</div><div class="t2">La correcta era: <b>${esc(a.options[a.correct])}</b></div>${a.explain ? `<div class="explain">💡 ${esc(a.explain)}</div>` : ''}</div>`;
+      const ok = m.ok;
+      if (navigator.vibrate) navigator.vibrate(ok ? [40, 60, 40] : 200);
+      return `<div class="screen big ${ok ? 'ok' : 'bad'}"><div class="ic">${ok ? '🎉' : '💀'}</div><div class="t1">${ok ? '¡CORRECTO!' : '¡CASI!'}</div>
+        ${ok ? `<div class="pts">+${m.pts}</div>` : `<div class="t2">La correcta era: <b>${esc(a.options[a.correct])}</b></div>`}
+        ${a.explain ? `<div class="explain">💡 ${esc(a.explain)}</div>` : ''}</div>`;
+    }
+    if (m) {
+      return `<div class="screen big"><div class="ic">${SHAPES[m.a]}</div><div class="t1" style="color:var(--accent)">¡RESPUESTA ENVIADA!</div><div class="t2">Espera el resultado en la pantalla ⏳</div></div>`;
+    }
+    return `<div class="screen"><div class="kick">QUIZ · ¡RÁPIDO = MÁS PUNTOS!</div><div class="q">${esc(a.question)}</div>
+      <div class="timer"><i id="tbar"></i></div>
+      <div class="opts">${a.options.map((o, i) => `<button class="opt o${i}" data-a="${i}"><span class="sh">${SHAPES[i]}</span>${esc(o)}</button>`).join('')}</div></div>`;
+  }
+
+  function poll(a, m) {
+    const total = (a.counts || []).reduce((x, y) => x + y, 0);
+    return `<div class="screen"><div class="kick">${a.open ? 'ENCUESTA · PUEDES CAMBIAR TU VOTO' : 'RESULTADOS'}</div><div class="q">${esc(a.question)}</div>
+      <div class="opts ${a.open ? '' : 'locked'}">${a.options.map((o, i) => {
+        const pct = a.counts && total ? Math.round(a.counts[i] / total * 100) : null;
+        return `<button class="opt o${i} ${m && m.a === i ? 'sel' : ''}" data-a="${i}" ${a.open ? '' : 'disabled'}><span class="sh">${esc(o.label)}</span><span>${esc(o.title)}${o.desc ? `<small>${esc(o.desc)}</small>` : ''}</span>${pct !== null ? `<span class="pc">${pct}%</span><span class="bar" style="width:${pct}%"></span>` : ''}</button>`;
+      }).join('')}</div>
+      <div class="note">${m ? '✔ Voto registrado' : 'Toca una opción'}</div></div>`;
+  }
+
+  function fsw(a, m) {
+    let info = m ? '✔ Respuesta registrada' : 'Responde con sinceridad 😄';
+    if (a.revealed && a.counts) info = `👀 ${a.counts[0]} dijeron <b>Yes</b> · ${a.counts[1]} dijeron <b>No</b>. ¡Mira la pantalla!`;
+    return `<div class="screen"><div class="kick">FIND SOMEONE WHO…</div><div class="q" style="font-size:26px">${esc(a.question)}</div>
+      <div class="fswb opts ${a.open ? '' : 'locked'}">
+        <button class="opt o3 ${m && m.a === 0 ? 'sel' : ''}" data-a="0" ${a.open ? '' : 'disabled'}>✔ ${esc(a.options[0])}</button>
+        <button class="opt o0 ${m && m.a === 1 ? 'sel' : ''}" data-a="1" ${a.open ? '' : 'disabled'}>✘ ${esc(a.options[1])}</button>
+      </div><div class="note">${info}</div></div>`;
+  }
+
+  function cloud(a, m) {
+    const words = (m && m.words) || [];
+    const can = a.open && words.length < 3;
+    return `<div class="screen"><div class="kick">NUBE DE IDEAS · ${words.length}/3</div><div class="q">${esc(a.question)}</div>
+      ${can ? `<div class="cloudbox"><input id="w" type="text" maxlength="28" placeholder="Escribe una idea corta" autocomplete="off" enterkeyhint="send"><button class="btn" id="ws">➤</button></div>` : ''}
+      <div class="mywords">${words.map((w) => `<span>${esc(w)}</span>`).join('')}</div>
+      <div class="note">${!a.open ? 'La nube se cerró. ¡Mira la pantalla!' : can ? (a.hint || 'Una idea por envío') : '¡Listo! Mira cómo crece la nube en la pantalla ☁️'}</div></div>`;
+  }
+
+  function bind() {
+    document.querySelectorAll('#main .opt[data-a]').forEach((b) => {
+      b.onclick = () => {
+        if (b.disabled) return;
+        const a = +b.dataset.a;
+        if (S.act.type !== 'quiz') {
+          document.querySelectorAll('#main .opt').forEach((x) => x.classList.toggle('sel', x === b));
+        }
+        send({ a });
+      };
+    });
+    const w = $('#w');
+    if (w) {
+      const go = () => { const t = w.value.trim(); if (!t) return; send({ text: t }); w.value = ''; };
+      $('#ws').onclick = go;
+      w.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+    }
+  }
+
+  // Barra de tiempo del quiz
+  (function tick() {
+    const bar = $('#tbar');
+    if (bar && S && S.act && S.act.type === 'quiz' && S.act.open) {
+      const rem = Math.max(0, S.act.endsAt - (Date.now() + clockOffset));
+      bar.style.width = (rem / (S.act.duration * 1000) * 100) + '%';
+    }
+    requestAnimationFrame(tick);
+  })();
+})();
+</script>
+</body>
+</html>

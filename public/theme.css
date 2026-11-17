@@ -1,0 +1,27 @@
+@import url('/fonts/press/index.css');
+@import url('/fonts/outfit/400.css');
+@import url('/fonts/outfit/600.css');
+@import url('/fonts/outfit/800.css');
+
+:root {
+  --bg: #070b1f;
+  --bg2: #0b1130;
+  --panel: rgba(16, 24, 58, 0.82);
+  --line: rgba(143, 163, 199, 0.35);
+  --cy: #00e5ff;
+  --mg: #ff3ea5;
+  --yl: #ffd60a;
+  --gr: #7cff4f;
+  --pu: #b388ff;
+  --wh: #ffffff;
+  --mute: #8fa3c7;
+  --accent: var(--cy);
+  --pixel: 'Press Start 2P', monospace;
+  --sans: 'Outfit', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; background: var(--bg); color: var(--wh); font-family: var(--sans); overflow: hidden; }
+button { font-family: inherit; }
+.c-cy { color: var(--cy); } .c-mg { color: var(--mg); } .c-yl { color: var(--yl); } .c-gr { color: var(--gr); } .c-pu { color: var(--pu); }
+.pixel { font-family: var(--pixel); }
