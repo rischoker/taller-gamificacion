@@ -195,7 +195,7 @@
     const lvl = S.type === 'level';
     const icons = { cover: '🎮', level: '🚀', sharkbait: '🦈', podium: '🏆', end: '👾' };
     const t1 = S.type === 'cover' ? '¡ESTÁS DENTRO!' : lvl ? S.title : 'MIRA LA PANTALLA';
-    const t3 = S.type === 'cover' ? 'Espera a que el profe empiece' : S.type === 'sharkbait' ? 'Escanea el QR de Shark Bait en la pantalla' : 'Las preguntas aparecerán aquí';
+    const t3 = S.type === 'cover' ? 'Espera a que el profe empiece' : S.type === 'sharkbait' ? 'El profe va a abrir Shark Bait: escanea el QR que aparece en su pantalla' : 'Las preguntas aparecerán aquí';
     return `<div class="screen wait"><div class="eye">${icons[S.type] || '👀'}</div><div class="t1">${esc(t1)}</div><div class="t2">${esc(lvl || S.type === 'cover' ? '' : S.title)}</div><div class="t3">${t3}</div></div>`;
   }
 

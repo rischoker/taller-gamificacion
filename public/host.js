@@ -18,6 +18,7 @@
   let S = null;
   let clockOffset = 0;
   let qrForced = false;
+  let SB_URL = '';
 
   // ---------------- Escalado ----------------
   function fit() {
@@ -344,7 +345,10 @@
         <div class="sb" data-a="zoom">SHARK<br><span>BAIT</span> 🦈</div>
         <div class="pts" data-a="up">🏴‍☠️ Salva a los piratas eligiendo la oración correcta.<br>⏳ Tiempo para responder · 👥 muchos jugadores<br>📶 Funciona con conexión lenta</div>
       </div>
-      <div data-a="pop"><div class="qrcard" style="border-color:var(--yl)"><img src="/qr.svg?t=sharkbait" alt="QR Shark Bait"><div class="qr-label" style="color:var(--yl)">¡A BORDO!</div><div class="qr-url" style="font-size:24px">Escanea con tu celular</div></div></div>
+      <div data-a="pop" style="text-align:center">
+        <a class="sbbtn" href="${esc(SB_URL)}" target="_blank" rel="noopener">▶ ABRIR<br>SHARK BAIT</a>
+        <div class="sbhint">Se abre en una pestaña nueva.<br>Los profes escanean el QR del juego.</div>
+      </div>
     </div>
     <div class="sea">
       <svg viewBox="0 0 3840 260" preserveAspectRatio="none" class="w1"><path d="M0 120 Q 240 60 480 120 T 960 120 T 1440 120 T 1920 120 T 2400 120 T 2880 120 T 3360 120 T 3840 120 V260 H0Z" fill="rgba(0,184,212,.35)"/></svg>
@@ -807,7 +811,11 @@
     const k = e.key;
     if (k === 'ArrowRight' || k === 'PageDown' || k === ' ') { e.preventDefault(); next(); }
     else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); prev(); }
-    else if (k === 'Enter') { e.preventDefault(); reveal(); }
+    else if (k === 'Enter') {
+      e.preventDefault();
+      if (SL[cur] && SL[cur].type === 'sharkbait' && SB_URL) window.open(SB_URL, '_blank', 'noopener');
+      else reveal();
+    }
     else if (k === 'f' || k === 'F') full();
     else if (k === 'q' || k === 'Q') toggleQr();
     else if (k === 'm' || k === 'M') toggleMute();
@@ -835,7 +843,7 @@
       }
       key = k; localStorage.setItem('hostKey', k);
       $('#auth').classList.add('hidden');
-      SL = res.slides; buildProgress();
+      SL = res.slides; SB_URL = res.sharkbaitUrl || ''; buildProgress();
       if (cur >= 0) { const c = cur; cur = -1; show(c); }
     });
   }

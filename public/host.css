@@ -336,3 +336,7 @@ body.mouse #controls { opacity: 1; }
 .sea { position: absolute; left: 0; right: 0; bottom: 0; height: 260px; overflow: hidden; pointer-events: none; }
 .sea svg { position: absolute; bottom: 0; width: 3840px; height: 260px; }
 .fin { position: absolute; bottom: 110px; font-size: 90px; }
+.sbbtn { display: inline-block; font-family: var(--pixel); font-size: 54px; line-height: 1.5; color: #070b1f; text-decoration: none; background: linear-gradient(135deg, #ffd60a, #ff8a3d); padding: 50px 70px; border-radius: 30px; box-shadow: 0 14px 0 #8a4a00, 0 0 60px rgba(255,214,10,.5); animation: sbpulse 1.6s ease-in-out infinite; cursor: pointer; }
+.sbbtn:hover { filter: brightness(1.1); }
+@keyframes sbpulse { 50% { transform: scale(1.04); } }
+.sbhint { margin-top: 44px; font-size: 30px; color: #c8d3ea; line-height: 1.4; }

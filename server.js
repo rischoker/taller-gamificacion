@@ -27,7 +27,7 @@ app.get('/healthz', (req, res) => res.send('ok'));
 
 const qrCache = new Map();
 app.get('/qr.svg', async (req, res) => {
-  const url = req.query.t === 'sharkbait' ? SHARKBAIT_URL : `${req.protocol}://${req.get('host')}/`;
+  const url = `${req.protocol}://${req.get('host')}/`;
   try {
     if (!qrCache.has(url)) {
       qrCache.set(url, await QRCode.toString(url, {
@@ -253,7 +253,7 @@ io.on('connection', (socket) => {
     if (key !== HOST_KEY) return cb && cb({ ok: false });
     isHost = true;
     socket.join('host');
-    cb && cb({ ok: true, slides: SLIDES.map(s => ({ ...s, act: s.act ? { ...s.act } : undefined })) });
+    cb && cb({ ok: true, sharkbaitUrl: SHARKBAIT_URL, slides: SLIDES.map(s => ({ ...s, act: s.act ? { ...s.act } : undefined })) });
     if (SLIDES[state.slide].act && !state.acts.has(state.slide)) newAct(state.slide);
     socket.emit('host:state', hostState());
   });
